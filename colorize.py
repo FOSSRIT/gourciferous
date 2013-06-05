@@ -2,7 +2,7 @@ import math
 
 
 projects = set()
-with open('hfoss.log') as f:
+with open('LOGFILE.log') as f:
     for line in f:
         split = line.strip().split('|')
         projects.add(split[3].split('/')[0])
@@ -19,7 +19,7 @@ with open('hfoss.log') as f:
     colors = colors * n_wraps
     color_lookup = dict(zip(projects, colors))
 
-with open('hfoss.log') as f:
+with open('LOGFILE.log') as f:
     for line in f:
         split = line.strip().split('|')
         project = split[3].split('/')[0]
