@@ -23,7 +23,7 @@
 #June 6, 2013
 #
 #*****************************************************
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 import time
 import os
@@ -55,21 +55,21 @@ root_path = '/home/nate/workspace/foss@rit'
 #            '/\|little_repos\/little_repo_B\//': '#FF0000',
 #            '/\|weird_repos\/weird_repo_C\//': 'c75d39',
 color_reg = {
-    r'^[AMD]\|hanginwit-threebean/': 'lightest_red',
-    r'^[AMD]\|Open-Video-Chat/': 'darker_red',
-    r'^[AMD]\|hfoss/': 'darkest_red',
-    r'^[AMD]\|tos-rit-projects-seminar/': 'main_orange',
-    r'^[AMD]\|Gold-Rush-Server/': 'lightest_yellow',
-    r'^[AMD]\|FortuneEngine/': 'lighter_yellow',
-    r'^[AMD]\|fortune_hunter/': 'main_yellow',
-    r'^[AMD]\|lemonade-stand/': 'darker_yellow',
-    r'^[AMD]\|lazorz/': 'darkest_yellow',
-    r'^[AMD]\|civx/': 'main_green',
-    r'^[AMD]\|election/': 'darker_green',
-    r'^[AMD]\|monroe-elections-data/': 'darkest_green',
-    r'^[AMD]\|RITRemixerator/': 'lightest_blue',
-    r'^[AMD]\|WebBot/': 'darker_blue',
-    r'^[AMD]\|blocku/': 'darkest_blue',
+    r'^[AMD]\|(\d+)/hanginwit-threebean/': 'lightest_red',
+    r'^[AMD]\|(\d+)/Open-Video-Chat/': 'darker_red',
+    r'^[AMD]\|(\d+)/hfoss/': 'darkest_red',
+    r'^[AMD]\|(\d+)/tos-rit-projects-seminar/': 'main_orange',
+    r'^[AMD]\|(\d+)/Gold-Rush-Server/': 'lightest_yellow',
+    r'^[AMD]\|(\d+)/FortuneEngine/': 'lighter_yellow',
+    r'^[AMD]\|(\d+)/fortune_hunter/': 'main_yellow',
+    r'^[AMD]\|(\d+)/lemonade-stand/': 'darker_yellow',
+    r'^[AMD]\|(\d+)/lazorz/': 'darkest_yellow',
+    r'^[AMD]\|(\d+)/civx/': 'main_green',
+    r'^[AMD]\|(\d+)/election/': 'darker_green',
+    r'^[AMD]\|(\d+)/monroe-elections-data/': 'darkest_green',
+    r'^[AMD]\|(\d+)/RITRemixerator/': 'lightest_blue',
+    r'^[AMD]\|(\d+)/WebBot/': 'darker_blue',
+    r'^[AMD]\|(\d+)/blocku/': 'darkest_blue',
 }
 
 # Color Library
@@ -150,6 +150,7 @@ def main():
 
 
 def slurp_commits(path, commits, all_commits):
+    year = None
     for commit in commits:
         commit = commit.split("\n")
         files = list()
@@ -161,27 +162,29 @@ def slurp_commits(path, commits, all_commits):
             if not line.strip():
                 continue
 
-            # Append files
-            if (line[:2] == "M\t") or (line[:2] == "A\t") \
-                 or (line[:2] == "D\t"):
-                #if filter(labmda x: re.match(x, line) is not None, ignore):
-                #    continue
-                files.append(''.join([line[:1], '|',
-                             os.path.split(path)[1],
-                             '/', line[2:]]))
-
-            # Extract author
-            elif line[:8] == "Author: ":
-                line_exp = line.split()
-                author = string.capwords(line_exp[1])
-
             # Extract date
-            elif line[:8] == "Date:   ":
+            if line[:8] == "Date:   ":
                 # Python and %z don't get along
                 date = line[8:].split(' -')[0].split(' +')[0]
+                year = date.split()[-1]
                 date = time.mktime(
                     time.strptime(date, '%a %b %d %H:%M:%S %Y'))
                 date = str(int(date))
+
+            # Extract author
+            elif line[:8] == "Author: ":
+                line_exp = line.split(': ')[1].split('<')[0]
+                author = string.capwords(line_exp)
+
+            # Append files
+            elif (line[:2] == "M\t") or (line[:2] == "A\t") \
+                 or (line[:2] == "D\t"):
+                #if filter(labmda x: re.match(x, line) is not None, ignore):
+                #    continue
+                files.append('|'.join([line[:1],
+                                       '/'.join([year,
+                                                 os.path.split(path)[1],
+                                                 line[2:]])]))
 
         # Generate log lines
         for file in files:
