@@ -1,1 +1,4 @@
-time gource --load-config custom-multi-2.conf -f -1280x720 foss_gource.log --output-ppm-stream - | ffmpeg     -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 fossrit.mp4
+time gource --load-config gource.conf -f -1280x720 gource.log --output-ppm-stream - | ffmpeg     -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 gource.mp4
+
+Just Play:
+time gource --load-config gource.conf -1280x720 gource.log
