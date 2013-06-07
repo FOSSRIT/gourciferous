@@ -13,7 +13,6 @@
 import math
 import sys
 
-input_file = output_file = 'LOGFILE.log'
 colors = ['F0F0F0', '454545', 'F03728', 'F8685D', 'F88E86', 'B44C43',
           '9C170D', 'F08828', 'F8A75D', 'F8BC86', 'B47943', '9C520D',
           '1B8493', '4EBAC9', '6FBEC9', '2B666E', '095560', '1FB839',
@@ -44,6 +43,15 @@ def recolorize_log(lines, color_lookup):
     
 
 if __name__ == '__main__':
+    if not len(sys.argv) >= 2:
+        print("Usage: colorize.py <input_file> [output_file]")
+        sys.exit(1)
+    input_file = sys.argv[1]
+    if len(sys.argv) >= 3:
+        output_file = sys.argv[2]
+    else:
+        output_file = input_file
+        
     lines, projects = scrape_projects(input_file)     
 
     n_wraps = int(math.ceil(len(projects) / float(len(colors))))
