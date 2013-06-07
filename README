@@ -43,6 +43,11 @@ log_generator.php to do the same thing, but in Python.
 
 Gourciferous is a collection of tools for configuring and
 rendering MultiGource visualizations based on this work.
+
+REQUIREMENTS
+============
+
+log_generator.py requires the ``sh`` python module.
  
 GENERATING THE LOG
 ==================
@@ -57,7 +62,7 @@ GENERATING THE LOG
    `python log_generator.py > {LOGFILE}`
    Where {LOGFILE} is the destination of your custom-format log.
 
-5. From the location of {LOGFILE}: 
+4. From the location of {LOGFILE}: 
    `python colorize.py {LOGFILE} {LOGIFILE-color}`
    {LOGFILE-color} may be omitted if you wish to overwrite the
    colors in {LOGFILE}.
