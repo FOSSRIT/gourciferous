@@ -31,7 +31,7 @@ n_wraps = 1 + int(math.ceil(len(projects) / float(len(colors))))
 colors = colors * n_wraps
 color_lookup = dict(zip(projects, colors))
 
-with open('LOGFILE.log') as f:
+with open('LOGFILE.log', 'r') as f:
     for line in f:
         split = line.strip().split('|')
         project = split[3].split('/')[0]
