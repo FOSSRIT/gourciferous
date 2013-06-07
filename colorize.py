@@ -27,14 +27,25 @@ def recolorize_log(input_file):
     projects = []
     with open(input_file) as f:
         for line in f:
+            # Split it up into pieces by the '|' character. 
             split = line.strip().split('|')
+            
+            # Pick out the third one, that's the file that was modified.
+            # If the file was foo/bar/baz.rb, pick out just the 'foo' part.  That's
+            # the "project name". 
             project = split[3].split('/')[0]
 
+            # Add it (once) to a list of projects to generate an abslute
+            # ordering of projects.
             if project not in projects:
                 projects.append(project)
-                
+            
+            # Tack a new color on the end based on that project's index.
             color_index = projects.index(project) % len(colors)
             split[-1] = colors[color_index]
+            
+            # Sew it all back up with the '|' character and add it to a list of
+            # lines to be written out. 
             output.append('|'.join(split))
     return output
     
