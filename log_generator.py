@@ -198,6 +198,12 @@ def slurp_commits(path, commits, all_commits):
             entry = '|'.join([date, author, file, color]) + "\n"
             all_commits[date] += entry
 
+        # Remove newline at end of each date's commits so that colorize.py
+        # doesn't crash due to reading in a blank line.
+        for date, entries in all_commits.items():
+            all_commits[date] = all_commits[date][:-1]
+            
+
     return all_commits
 
 
