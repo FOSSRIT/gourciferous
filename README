@@ -57,10 +57,10 @@ GENERATING THE LOG
    `python log_generator.py > {LOGFILE}`
    Where {LOGFILE} is the destination of your custom-format log.
 
-4. Edit colorize.py to define your {LOGIFILE} to colorize.
-
 5. From the location of {LOGFILE}: 
-   `python colorize.py > {LOGIFILE-color}`
+   `python colorize.py {LOGFILE} {LOGIFILE-color}`
+   {LOGFILE-color} may be omitted if you wish to overwrite the
+   colors in {LOGFILE}.
 
 GENERATING THE VISUALIZATION
 ============================

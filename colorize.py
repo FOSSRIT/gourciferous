@@ -54,11 +54,9 @@ if __name__ == '__main__':
     if not len(sys.argv) >= 2:
         print("Usage: colorize.py <input_file> [output_file]")
         sys.exit(1)
-    input_file = sys.argv[1]
+    input_file = output_file = sys.argv[1]
     if len(sys.argv) >= 3:
         output_file = sys.argv[2]
-    else:
-        output_file = input_file
     
     output_lines = recolorize_log(input_file)
     with open(output_file, 'w') as f:
