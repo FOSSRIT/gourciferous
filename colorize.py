@@ -11,8 +11,9 @@
 #
 #*****************************************************
 import math
+import sys
 
-
+input_file = output_file = 'LOGFILE.log'
 colors = ['F0F0F0', '454545', 'F03728', 'F8685D', 'F88E86', 'B44C43',
           '9C170D', 'F08828', 'F8A75D', 'F8BC86', 'B47943', '9C520D',
           '1B8493', '4EBAC9', '6FBEC9', '2B666E', '095560', '1FB839',
@@ -20,25 +21,40 @@ colors = ['F0F0F0', '454545', 'F03728', 'F8685D', 'F88E86', 'B44C43',
           'DCF383', '97AD41', '7A960C', '841B93', 'BA4EC9', 'BE6FC9',
           '662B6E', '550960',]
 
-projects = set()
-with open('LOGFILE.log') as f:
-    for line in f:
+def scrape_projects(input_file):
+    """Find all projects described in the input file."""
+    projects = set()
+    with open(input_file) as f:
+        lines = f.readlines()
+        
+    for line in lines:
         split = line.strip().split('|')
         projects.add(split[3].split('/')[0])
-        
-
-n_wraps = 1 + int(math.ceil(len(projects) / float(len(colors))))
-colors = colors * n_wraps
-color_lookup = dict(zip(projects, colors))
-
-with open('LOGFILE.log') as f:
-    for line in f:
+    return lines, projects
+    
+    
+def recolorize_log(lines, color_lookup):
+    """Change colors in log per project."""
+    output = []
+    for line in lines:
         split = line.strip().split('|')
         project = split[3].split('/')[0]
         split[-1] = color_lookup[project]
-        print '|'.join(split)
+    return output
+    
 
+if __name__ == '__main__':
+    lines, projects = scrape_projects(input_file)     
 
+    n_wraps = int(math.ceil(len(projects) / float(len(colors))))
+    colors = colors * n_wraps
+    color_lookup = dict(zip(projects, colors))
+    
+    output = recolorize_log(lines, color_lookup)
+    with open(output_file, 'w') as f:
+        for line in output:
+            f.write('{}\n'.format(line))
+    
 
 #['1278077105', 'Tim', 'A', 'mapwarper/public/javascripts/dig/mfbase/ext/air/samples/tasks/ext-2.0/resources/images/default/qtip/bg.gif', 'F0F0F0']
 # Here's the plan:
