@@ -20,25 +20,22 @@ colors = ['F0F0F0', '454545', 'F03728', 'F8685D', 'F88E86', 'B44C43',
           'DCF383', '97AD41', '7A960C', '841B93', 'BA4EC9', 'BE6FC9',
           '662B6E', '550960',]
 
-def scrape_projects(input_file):
-    """Find all projects described in the input file."""
-    projects = set()
-    with open(input_file) as f:
-        lines = f.readlines()
-        
-    for line in lines:
-        split = line.strip().split('|')
-        projects.add(split[3].split('/')[0])
-    return lines, projects
-    
-    
-def recolorize_log(lines, color_lookup):
+
+def recolorize_log(input_file):
     """Change colors in log per project."""
     output = []
-    for line in lines:
-        split = line.strip().split('|')
-        project = split[3].split('/')[0]
-        split[-1] = color_lookup[project]
+    projects = []
+    with open(input_file) as f:
+        for line in f:
+            split = line.strip().split('|')
+            project = split[3].split('/')[0]
+
+            if project not in projects:
+                projects.append(project)
+                
+            color_index = projects.index(project) % len(colors)
+            split[-1] = colors[color_index]
+            output.append('|'.join(split))
     return output
     
 
@@ -51,16 +48,10 @@ if __name__ == '__main__':
         output_file = sys.argv[2]
     else:
         output_file = input_file
-        
-    lines, projects = scrape_projects(input_file)     
-
-    n_wraps = int(math.ceil(len(projects) / float(len(colors))))
-    colors = colors * n_wraps
-    color_lookup = dict(zip(projects, colors))
     
-    output = recolorize_log(lines, color_lookup)
+    output_lines = recolorize_log(input_file)
     with open(output_file, 'w') as f:
-        for line in output:
+        for line in output_lines:
             f.write('{}\n'.format(line))
     
 
