@@ -16,7 +16,7 @@
 #Author: Nate Case (irc: Qalthos)
 #December 6, 2012
 #
-#Author: David Gay (PEP8 work)
+#Author: David Gay (PEP8 work, fixes)
 #March 18, 2013
 #
 #Author: Suzanne Reed
