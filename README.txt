@@ -56,13 +56,13 @@ GENERATING THE LOG
    directory. They can be buried in subdirectories.
    Only Git repositories are supported at this time.
 
-2. Edit log_generator.py to define your root path.
+2. From the location of log_generator.py:
+   ``python log_generator.py {GIT_FOLDER} {LOGFILE}``
+   Where {GIT_FOLDER} is the directory containing all of your git
+   repositories, and {LOGFILE} is the destination of your custom-format
+   log.
 
-3. From the location of log_generator.py:
-   ``python log_generator.py > {LOGFILE}``
-   Where {LOGFILE} is the destination of your custom-format log.
-
-4. From the location of {LOGFILE}: 
+3. From the location of {LOGFILE}: 
    ``python colorize.py {LOGFILE} {LOGIFILE-color}``
    {LOGFILE-color} may be omitted if you wish to overwrite the
    colors in {LOGFILE}.

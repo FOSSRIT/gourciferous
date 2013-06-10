@@ -29,17 +29,13 @@ import time
 import os
 import re
 import string
+import sys
 
 import sh
 
 #**********************
 #  USER DEFINED VALUES
 #**********************
-#
-# Root path
-#   EXAMPLE: '/home/chris/repos'
-root_path = '/home/nate/workspace/foss@rit'
-
 # Color Regexes
 #  Gource has some default colors it applies based on file type but
 #  this can make it hard to tell which repos are which. Here you can
@@ -120,9 +116,7 @@ color_lib = {
 #**********************
 # EXECUTABLE CODE
 #**********************
-
-
-def main():
+def main(root_path, output_file):
     all_commits = dict()
 
     for path, names, files in os.walk(root_path):
@@ -131,7 +125,7 @@ def main():
             os.chdir(path)
             #print('Checking log at %s' % path)
             commits = sh.git("--no-pager", "log", "--name-status") \
-                .split("\n\n\x1b[33mcommit ")
+                        .split("\n\n\x1b[33mcommit ")
             #print('Done!')
             all_commits = slurp_commits(path, commits, all_commits)
 
@@ -141,14 +135,13 @@ def main():
         scalar_log = scalar_log.encode('utf8')
     except UnicodeEncodeError:
         scalar_log = scalar_log.encode('windows-1252')
-    print(scalar_log)
+    with open(output_file, 'w') as file_:
+        file_.write(scalar_log)
 
 
 #*************************
 #  FUNCTIONS
 #*************************
-
-
 def slurp_commits(path, commits, all_commits):
     year = None
     for commit in commits:
@@ -203,4 +196,9 @@ def slurp_commits(path, commits, all_commits):
 
 
 if __name__ == '__main__':
-    main()
+    if not len(sys.argv) >= 3:
+        print("Usage: colorize.py <git_directory> <output_file>")
+        sys.exit(1)
+    root_path = sys.argv[1]
+    output_file = sys.argv[2]
+    main(root_path, output_file)
