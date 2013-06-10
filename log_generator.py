@@ -136,7 +136,7 @@ def main():
             all_commits = slurp_commits(path, commits, all_commits)
 
     all_commits = sorted(all_commits.values())
-    scalar_log = ''.join(all_commits)
+    scalar_log = '\n'.join(all_commits)
     try:
         scalar_log = scalar_log.encode('utf8')
     except UnicodeEncodeError:
@@ -193,10 +193,11 @@ def slurp_commits(path, commits, all_commits):
                                 color_reg):
                 color = color_lib.get(color_reg[regex]) or color
 
-            if not all_commits.get(date):
-                all_commits[date] = ''
             entry = '|'.join([date, author, file, color])
-            all_commits[date] = '\n'.join([all_commits[date], entry])
+            if not all_commits.get(date):
+                all_commits[date] = entry
+            else:
+                all_commits[date] = '\n'.join([all_commits[date], entry])
 
     return all_commits
 
