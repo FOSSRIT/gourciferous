@@ -43,6 +43,11 @@ log_generator.php to do the same thing, but in Python.
 
 Gourciferous is a collection of tools for configuring and
 rendering MultiGource visualizations based on this work.
+
+REQUIREMENTS
+============
+
+log_generator.py requires the ``sh`` python module.
  
 GENERATING THE LOG
 ==================
@@ -54,20 +59,20 @@ GENERATING THE LOG
 2. Edit log_generator.py to define your root path.
 
 3. From the location of log_generator.py:
-   `python log_generator.py > {LOGFILE}`
+   ``python log_generator.py > {LOGFILE}``
    Where {LOGFILE} is the destination of your custom-format log.
 
-4. Edit colorize.py to define your {LOGIFILE} to colorize.
-
-5. From the location of {LOGFILE}: 
-   `python colorize.py > {LOGIFILE-color}`
+4. From the location of {LOGFILE}: 
+   ``python colorize.py {LOGFILE} {LOGIFILE-color}``
+   {LOGFILE-color} may be omitted if you wish to overwrite the
+   colors in {LOGFILE}.
 
 GENERATING THE VISUALIZATION
 ============================
 
 Here's the basic command to get your visualization running at 720p:
 
-% gource --load-config /path/to/multigource.conf -1280x720 {LOGFILE}
+    % gource --load-config /path/to/multigource.conf -1280x720 {LOGFILE}
 
 WARNING! Running Gource on many big projects like this can take a
 long time! Watching your visualization as it renders may be
@@ -84,8 +89,9 @@ Here's an updated command that turns Gource into a stream and pipes it
 to ffmpeg. The extra flags on the ffmpeg part are tuned to produce a 720p
 video file that has a good balance of high quality and decent file size.
 
-% gource --load-config  /path/to/multigource.conf -1280x720 {LOGFILE} --output-ppm-stream - | \
-  ffmpeg -an -threads 4 -y -vb 4000000 -s 1280x720 -r 30 -f image2pipe -vcodec ppm -i - {OUTPUTFILE}
+    % gource --load-config  /path/to/multigource.conf -1280x720 {LOGFILE}
+    --output-ppm-stream - | \ ffmpeg -an -threads 4 -y -vb 4000000 -s 1280x720 -r
+    30 -f image2pipe -vcodec ppm -i - {OUTPUTFILE}
 
 Please refer to ffmpeg documentation to understand these flags and how
 to tweak them. {OUTPUTFILE} is the path to the final video and its format
