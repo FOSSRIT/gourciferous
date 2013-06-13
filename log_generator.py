@@ -125,7 +125,8 @@ def compile_commits(root_path):
             gitpath = os.path.join(path, '.git')
             commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
                              "--name-status").split("\n\n\x1b[33mcommit ")
-            all_commits = project_commits(path, commits, all_commits)
+            project_name = os.path.split(path)[1]
+            all_commits = project_commits(project_name, commits, all_commits)
 
     return all_commits
 
@@ -133,7 +134,7 @@ def compile_commits(root_path):
 #*************************
 #  FUNCTIONS
 #*************************
-def project_commits(path, commits, all_commits):
+def project_commits(project, commits, all_commits):
     year = None
     for commit in commits:
         commit = commit.split("\n")
@@ -166,9 +167,7 @@ def project_commits(path, commits, all_commits):
                 #if filter(labmda x: re.match(x, line) is not None, ignore):
                 #    continue
                 files.append('|'.join([line[:1],
-                                       '/'.join([year,
-                                                 os.path.split(path)[1],
-                                                 line[2:]])]))
+                                       '/'.join([year, project, line[2:]])]))
 
         # Generate log lines
         for file in files:
