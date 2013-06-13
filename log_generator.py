@@ -122,11 +122,9 @@ def main(root_path, output_file):
     for path, names, files in os.walk(root_path):
         # If dir is a repo then slurp in the log
         if '.git' in names:
-            os.chdir(path)
-            #print('Checking log at %s' % path)
-            commits = sh.git("--no-pager", "log", "--name-status") \
-                        .split("\n\n\x1b[33mcommit ")
-            #print('Done!')
+            gitpath = os.path.join(path, '.git')
+            commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
+                             "--name-status").split("\n\n\x1b[33mcommit ")
             all_commits = slurp_commits(path, commits, all_commits)
 
     all_commits = sorted(all_commits.values())
