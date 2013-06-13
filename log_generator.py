@@ -136,8 +136,8 @@ def project_commits(project, commits, all_commits, color):
                  or (line[:2] == "D\t"):
                 #if filter(labmda x: re.match(x, line) is not None, ignore):
                 #    continue
-                files.append('|'.join([line[:1],
-                                       '/'.join([year, project, line[2:]])]))
+                modified_path = '/'.join([year, project, line[2:]])
+                files.append('|'.join([line[:1], modified_path]))
 
         # Generate log lines
         for file in files:
