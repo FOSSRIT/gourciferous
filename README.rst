@@ -65,13 +65,6 @@ GENERATING THE LOG
    repositories, and {LOGFILE} is the destination of your custom-format
    log.
 
-3. From the location of {LOGFILE}::
-
-       python colorize.py {LOGFILE} {COLORIZED-LOGIFILE}
-
-   {COLORIZED-LOGFILE} may be omitted if you wish to overwrite the
-   colors in {LOGFILE}.
-
 GENERATING THE VISUALIZATION
 ============================
 
