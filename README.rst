@@ -1,10 +1,11 @@
-   _____                      _  __                         
-  / ____|                    (_)/ _|                        
- | |  __  ___  _   _ _ __ ___ _| |_ ___ _ __ ___  _   _ ___ 
- | | |_ |/ _ \| | | | '__/ __| |  _/ _ \ '__/ _ \| | | / __|
- | |__| | (_) | |_| | | | (__| | ||  __/ | | (_) | |_| \__ \
-  \_____|\___/ \__,_|_|  \___|_|_| \___|_|  \___/ \__,_|___/
-============================================================
+::
+
+       _____                      _  __
+      / ____|                    (_)/ _|
+     | |  __  ___  _   _ _ __ ___ _| |_ ___ _ __ ___  _   _ ___
+     | | |_ |/ _ \| | | | '__/ __| |  _/ _ \ '__/ _ \| | | / __|
+     | |__| | (_) | |_| | | | (__| | ||  __/ | | (_) | |_| \__ \
+      \_____|\___/ \__,_|_|  \___|_|_| \___|_|  \___/ \__,_|___/
 
 MULTIGOURCE
 Author: Christopher Clark (@Frencil)
@@ -38,7 +39,7 @@ Gource to produce one massive visualization of many repos.
 
 On GitHub:   https://github.com/Frencil/MultiGource
 
-log_generator.py is a script Qalthos developed based on 
+log_generator.py is a script Qalthos developed based on
 log_generator.php to do the same thing, but in Python.
 
 Gourciferous is a collection of tools for configuring and
@@ -48,7 +49,7 @@ REQUIREMENTS
 ============
 
 log_generator.py requires the ``sh`` python module.
- 
+
 GENERATING THE LOG
 ==================
 
@@ -56,21 +57,18 @@ GENERATING THE LOG
    directory. They can be buried in subdirectories.
    Only Git repositories are supported at this time.
 
-2. Edit log_generator.py to define your root path.
+2. From the location of log_generator.py::
 
-3. From the location of log_generator.py:
-   ``python log_generator.py > {LOGFILE}``
-   Where {LOGFILE} is the destination of your custom-format log.
+       python log_generator.py {GIT_FOLDER} {LOGFILE}
 
-4. From the location of {LOGFILE}: 
-   ``python colorize.py {LOGFILE} {LOGIFILE-color}``
-   {LOGFILE-color} may be omitted if you wish to overwrite the
-   colors in {LOGFILE}.
+   Where {GIT_FOLDER} is the directory containing all of your git
+   repositories, and {LOGFILE} is the destination of your custom-format
+   log.
 
 GENERATING THE VISUALIZATION
 ============================
 
-Here's the basic command to get your visualization running at 720p:
+Here's the basic command to get your visualization running at 720p::
 
     % gource --load-config /path/to/multigource.conf -1280x720 {LOGFILE}
 
@@ -87,11 +85,10 @@ To do this you'll need to install ffmpeg. Just get it, it's awesome.
 
 Here's an updated command that turns Gource into a stream and pipes it
 to ffmpeg. The extra flags on the ffmpeg part are tuned to produce a 720p
-video file that has a good balance of high quality and decent file size.
+video file that has a good balance of high quality and decent file size::
 
-    % gource --load-config  /path/to/multigource.conf -1280x720 {LOGFILE}
-    --output-ppm-stream - | \ ffmpeg -an -threads 4 -y -vb 4000000 -s 1280x720 -r
-    30 -f image2pipe -vcodec ppm -i - {OUTPUTFILE}
+    % gource --load-config  /path/to/multigource.conf -1280x720 {LOGFILE} --output-ppm-stream - | \
+    ffmpeg -an -threads 4 -y -vb 4000000 -s 1280x720 -r 30 -f image2pipe -vcodec ppm -i - {OUTPUTFILE}
 
 Please refer to ffmpeg documentation to understand these flags and how
 to tweak them. {OUTPUTFILE} is the path to the final video and its format

@@ -27,51 +27,14 @@ from __future__ import print_function, unicode_literals
 
 import time
 import os
-import re
 import string
+import sys
 
 import sh
 
 #**********************
 #  USER DEFINED VALUES
 #**********************
-#
-# Root path
-#   EXAMPLE: '/home/chris/repos'
-root_path = '/home/nate/workspace/foss@rit'
-
-# Color Regexes
-#  Gource has some default colors it applies based on file type but
-#  this can make it hard to tell which repos are which. Here you can
-#  define regular expressions that will map whole directories to a
-#  color. It can be a top-level directory of a repo or a subdirectory
-#  at any depth.
-#  FORMAT: {REGEX} : {COLOR}
-#          Where {REGEX} is your directory (from root_path) with
-#      a leading pipe (| - prevents false positives)
-#      and {COLOR} is either a six-digit hex (e.g. '#FF0000' or 'c75d39')
-#      or a key in the pre-defined color library (e.g. 'main_green').
-#  EXAMPLES: '/\|big_repos\/big_repo_A\//': 'main_green',
-#            '/\|little_repos\/little_repo_B\//': '#FF0000',
-#            '/\|weird_repos\/weird_repo_C\//': 'c75d39',
-color_reg = {
-    r'^[AMD]\|(\d+)/hanginwit-threebean/': 'lightest_red',
-    r'^[AMD]\|(\d+)/Open-Video-Chat/': 'darker_red',
-    r'^[AMD]\|(\d+)/hfoss/': 'darkest_red',
-    r'^[AMD]\|(\d+)/tos-rit-projects-seminar/': 'main_orange',
-    r'^[AMD]\|(\d+)/Gold-Rush-Server/': 'lightest_yellow',
-    r'^[AMD]\|(\d+)/FortuneEngine/': 'lighter_yellow',
-    r'^[AMD]\|(\d+)/fortune_hunter/': 'main_yellow',
-    r'^[AMD]\|(\d+)/lemonade-stand/': 'darker_yellow',
-    r'^[AMD]\|(\d+)/lazorz/': 'darkest_yellow',
-    r'^[AMD]\|(\d+)/civx/': 'main_green',
-    r'^[AMD]\|(\d+)/election/': 'darker_green',
-    r'^[AMD]\|(\d+)/monroe-elections-data/': 'darkest_green',
-    r'^[AMD]\|(\d+)/RITRemixerator/': 'lightest_blue',
-    r'^[AMD]\|(\d+)/WebBot/': 'darker_blue',
-    r'^[AMD]\|(\d+)/blocku/': 'darkest_blue',
-}
-
 # Color Library
 #  Just a handful of colors that look good in Gource.
 color_lib = {
@@ -120,36 +83,28 @@ color_lib = {
 #**********************
 # EXECUTABLE CODE
 #**********************
-
-
-def main():
+def compile_commits(root_path):
     all_commits = dict()
+    project_number = 0
 
     for path, names, files in os.walk(root_path):
         # If dir is a repo then slurp in the log
         if '.git' in names:
-            os.chdir(path)
-            #print('Checking log at %s' % path)
-            commits = sh.git("--no-pager", "log", "--name-status") \
-                .split("\n\n\x1b[33mcommit ")
-            #print('Done!')
-            all_commits = slurp_commits(path, commits, all_commits)
+            gitpath = os.path.join(path, '.git')
+            commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
+                             "--name-status").split("\n\n\x1b[33mcommit ")
+            project_color = color_lib.values()[(project_number % len(color_lib))]
+            project_name = os.path.split(path)[1]
+            all_commits = project_commits(project_name, commits, all_commits, project_color)
+            project_number += 1
 
-    all_commits = sorted(all_commits.values())
-    scalar_log = '\n'.join(all_commits)
-    try:
-        scalar_log = scalar_log.encode('utf8')
-    except UnicodeEncodeError:
-        scalar_log = scalar_log.encode('windows-1252')
-    print(scalar_log)
+    return all_commits
 
 
 #*************************
 #  FUNCTIONS
 #*************************
-
-
-def slurp_commits(path, commits, all_commits):
+def project_commits(project, commits, all_commits, color):
     year = None
     for commit in commits:
         commit = commit.split("\n")
@@ -181,26 +136,31 @@ def slurp_commits(path, commits, all_commits):
                  or (line[:2] == "D\t"):
                 #if filter(labmda x: re.match(x, line) is not None, ignore):
                 #    continue
-                files.append('|'.join([line[:1],
-                                       '/'.join([year,
-                                                 os.path.split(path)[1],
-                                                 line[2:]])]))
+                modified_path = '/'.join([year, project, line[2:]])
+                files.append('|'.join([line[:1], modified_path]))
 
         # Generate log lines
         for file in files:
-            color = color_lib['default_color']
-            for regex in filter(lambda regex: re.match(regex, file),
-                                color_reg):
-                color = color_lib.get(color_reg[regex]) or color
-
-            entry = '|'.join([date, author, file, color])
+            entry = '|'.join([date, author, file, color]) + '\n'
+            entry = entry.encode('utf8')
             if not all_commits.get(date):
-                all_commits[date] = entry
+                all_commits[date] = [entry]
             else:
-                all_commits[date] = '\n'.join([all_commits[date], entry])
+                all_commits[date].append(entry)
 
     return all_commits
 
 
 if __name__ == '__main__':
-    main()
+    if not len(sys.argv) >= 3:
+        print("Usage: log_generator.py <git_directory> <output_file>")
+        sys.exit(1)
+    root_path = sys.argv[1]
+    output_file = sys.argv[2]
+    all_commits = compile_commits(root_path)
+
+    commits = map(lambda x: all_commits[x], sorted(all_commits))
+
+    with open(output_file, 'w') as f:
+        for lines in commits:
+            f.writelines(lines)
