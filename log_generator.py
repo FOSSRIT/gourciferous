@@ -116,7 +116,7 @@ color_lib = {
 #**********************
 # EXECUTABLE CODE
 #**********************
-def main(root_path, output_file):
+def compile_commits(root_path):
     all_commits = dict()
 
     for path, names, files in os.walk(root_path):
@@ -125,22 +125,15 @@ def main(root_path, output_file):
             gitpath = os.path.join(path, '.git')
             commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
                              "--name-status").split("\n\n\x1b[33mcommit ")
-            all_commits = slurp_commits(path, commits, all_commits)
+            all_commits = project_commits(path, commits, all_commits)
 
-    all_commits = sorted(all_commits.values())
-    scalar_log = '\n'.join(all_commits)
-    try:
-        scalar_log = scalar_log.encode('utf8')
-    except UnicodeEncodeError:
-        scalar_log = scalar_log.encode('windows-1252')
-    with open(output_file, 'w') as file_:
-        file_.write(scalar_log)
+    return all_commits
 
 
 #*************************
 #  FUNCTIONS
 #*************************
-def slurp_commits(path, commits, all_commits):
+def project_commits(path, commits, all_commits):
     year = None
     for commit in commits:
         commit = commit.split("\n")
@@ -184,11 +177,12 @@ def slurp_commits(path, commits, all_commits):
                                 color_reg):
                 color = color_lib.get(color_reg[regex]) or color
 
-            entry = '|'.join([date, author, file, color])
+            entry = '|'.join([date, author, file, color]) + '\n'
+            entry = entry.encode('utf8')
             if not all_commits.get(date):
-                all_commits[date] = entry
+                all_commits[date] = [entry]
             else:
-                all_commits[date] = '\n'.join([all_commits[date], entry])
+                all_commits[date].append(entry)
 
     return all_commits
 
@@ -199,4 +193,10 @@ if __name__ == '__main__':
         sys.exit(1)
     root_path = sys.argv[1]
     output_file = sys.argv[2]
-    main(root_path, output_file)
+    all_commits = compile_commits(root_path)
+
+    commits = map(lambda x: all_commits[x], sorted(all_commits))
+
+    with open(output_file, 'w') as f:
+        for lines in commits:
+            f.writelines(lines)
