@@ -154,7 +154,7 @@ def project_commits(project, commits, all_commits, color):
 
 if __name__ == '__main__':
     if not len(sys.argv) >= 3:
-        print("Usage: colorize.py <git_directory> <output_file>")
+        print("Usage: log_generator.py <git_directory> <output_file>")
         sys.exit(1)
     root_path = sys.argv[1]
     output_file = sys.argv[2]
