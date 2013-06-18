@@ -153,10 +153,17 @@ def project_commits(project, commits, all_commits, color):
 
 if __name__ == '__main__':
     if not len(sys.argv) >= 3:
-        print("Usage: log_generator.py <git_directory> <output_file>")
+        print("Usage: log_generator.py <git_directory> <output_file> [color_file]")
         sys.exit(1)
     root_path = sys.argv[1]
     output_file = sys.argv[2]
+
+    # TODO: Sanity check color input file
+    if len(sys.argv) >=4:
+        color_file_location = sys.argv[3]
+        with open(color_file_location) as color_file:
+            colors = color_file.readlines()
+
     all_commits = compile_commits(root_path)
 
     commits = map(lambda x: all_commits[x], sorted(all_commits))
