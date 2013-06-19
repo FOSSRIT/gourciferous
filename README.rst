@@ -59,11 +59,13 @@ GENERATING THE LOG
 
 2. From the location of log_generator.py::
 
-       python log_generator.py {GIT_FOLDER} {LOGFILE}
+       python log_generator.py {GIT_FOLDER} {LOGFILE} {COLOR_FILE}
 
    Where {GIT_FOLDER} is the directory containing all of your git
    repositories, and {LOGFILE} is the destination of your custom-format
-   log.
+   log. {COLOR_FILE} is an optional file, with one color on each line
+   in hexdecimal format (ie, '13579AC', with no quotes and no other
+   characters) which details which colors to use and in which order.
 
 GENERATING THE VISUALIZATION
 ============================

@@ -37,47 +37,47 @@ import sh
 #**********************
 # Color Library
 #  Just a handful of colors that look good in Gource.
-color_lib = {
-    'default_color': 'F0F0F0',
+colors = [
+    'F0F0F0', # default_color
 
-    'main_black': '454545',
+    '454545', # main_black
 
-    'main_red': 'F03728',
-    'lighter_red': 'F8685D',
-    'lightest_red': 'F88E86',
-    'darker_red': 'B44C43',
-    'darkest_red': '9C170D',
+    'F03728', # main_red
+    'F8685D', # lighter_red
+    'F88E86', # lightest_red
+    'B44C43', # darker_red
+    '9C170D', # darkest_red
 
-    'main_orange': 'F08828',
-    'lighter_orange': 'F8A75D',
-    'lightest_orange': 'F8BC86',
-    'darker_orange': 'B47943',
-    'darkest_orange': '9C520D',
+    'F08828', # main_orange
+    'F8A75D', # lighter_orange
+    'F8BC86', # lightest_orange
+    'B47943', # darker_orange
+    '9C520D', # darkest_orange
 
-    'main_blue': '1B8493',
-    'lighter_blue': '4EBAC9',
-    'lightest_blue': '6FBEC9',
-    'darker_blue': '2B666E',
-    'darkest_blue': '095560',
+    'BFE626', # main_yellow
+    'D4F35B', # lighter_yellow
+    'DCF383', # lightest_yellow
+    '97AD41', # darker_yellow
+    '7A960C', # darkest_yellow
 
-    'main_green': '1FB839',
-    'lighter_green': '52DB6A',
-    'lightest_green': '77DB88',
-    'darker_green': '348A43',
-    'darkest_green': '0A771D',
+    '1FB839', # main_green
+    '52DB6A', # lighter_green
+    '77DB88', # lightest_green
+    '348A43', # darker_green
+    '0A771D', # darkest_green
 
-    'main_yellow': 'BFE626',
-    'lighter_yellow': 'D4F35B',
-    'lightest_yellow': 'DCF383',
-    'darker_yellow': '97AD41',
-    'darkest_yellow': '7A960C',
+    '1B8493', # main_blue
+    '4EBAC9', # lighter_blue
+    '6FBEC9', # lightest_blue
+    '2B666E', # darker_blue
+    '095560', # darkest_blue
 
-    'main_purple': '841B93',
-    'lighter_purple': 'BA4EC9',
-    'lightest_purple': 'BE6FC9',
-    'darker_purple': '662B6E',
-    'darkest_purple': '550960',
-}
+    '841B93', # main_purple
+    'BA4EC9', # lighter_purple
+    'BE6FC9', # lightest_purple
+    '662B6E', # darker_purple
+    '550960', # darkest_purple
+]
 
 
 #**********************
@@ -93,7 +93,7 @@ def compile_commits(root_path):
             gitpath = os.path.join(path, '.git')
             commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
                              "--name-status").split("\n\n\x1b[33mcommit ")
-            project_color = color_lib.values()[(project_number % len(color_lib))]
+            project_color = colors[(project_number % len(colors))]
             project_name = os.path.split(path)[1]
             all_commits = project_commits(project_name, commits, all_commits, project_color)
             project_number += 1
@@ -153,10 +153,17 @@ def project_commits(project, commits, all_commits, color):
 
 if __name__ == '__main__':
     if not len(sys.argv) >= 3:
-        print("Usage: log_generator.py <git_directory> <output_file>")
+        print("Usage: log_generator.py <git_directory> <output_file> [color_file]")
         sys.exit(1)
     root_path = sys.argv[1]
     output_file = sys.argv[2]
+
+    # TODO: Sanity check color input file
+    if len(sys.argv) >=4:
+        color_file_location = sys.argv[3]
+        with open(color_file_location) as color_file:
+            colors = color_file.readlines()
+
     all_commits = compile_commits(root_path)
 
     commits = map(lambda x: all_commits[x], sorted(all_commits))
