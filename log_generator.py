@@ -32,6 +32,8 @@ import sys
 
 import sh
 
+import argparse
+
 #**********************
 #  USER DEFINED VALUES
 #**********************
@@ -126,10 +128,11 @@ def project_commits(project, commits, all_commits, color):
                     time.strptime(date, '%a %b %d %H:%M:%S %Y'))
                 date = str(int(date))
 
-            # Extract author
+            # Extract author and email
             elif line[:8] == "Author: ":
-                line_exp = line.split(': ')[1].split('<')[0]
-                author = string.capwords(line_exp)
+                line_exp = line.split(': ')[1].split('<')
+                author = string.capwords(line_exp[0])
+                email_host = line_exp[1].split('>')[0].split('@').pop()
 
             # Append files
             elif (line[:2] == "M\t") or (line[:2] == "A\t") \
@@ -148,22 +151,34 @@ def project_commits(project, commits, all_commits, color):
             else:
                 all_commits[date].append(entry)
 
+        # TODO Add avatars file generating here
+
     return all_commits
 
 
 if __name__ == '__main__':
-    if not len(sys.argv) >= 3:
-        print("Usage: log_generator.py <git_directory> <output_file> [color_file]")
-        sys.exit(1)
-    root_path = sys.argv[1]
-    output_file = sys.argv[2]
 
-    # TODO: Sanity check color input file
-    if len(sys.argv) >=4:
-        color_file_location = sys.argv[3]
-        with open(color_file_location) as color_file:
-            colors = color_file.readlines()
+    p = argparse.ArgumentParser(description='Create a custom Gource log file.')
+    p.add_argument('-g', '--gitDirectory', default=os.getcwd(), help='Directory with all Git logs')
+    p.add_argument('-o', '--outputLog', default='customLog.log', help='Custom Log Name')
+    p.add_argument('-c', '--colorFile', help='Custom Color File')
+    p.add_argument('-a', '--avatarFile', help='Create an avatar output file')
+    args = p.parse_args()
 
+    root_path = args.gitDirectory
+    output_file = args.outputLog
+
+    # Use custom color file over default
+    if args.colorFile:
+        with open(args.colorFile) as colorFile:
+            colors = colorFile.readlines()
+
+    # Placeholder until avatar file generating is added
+    if args.avatarFile:
+        print(args.avatarFile)
+    else:
+        print('No avatars')
+    
     all_commits = compile_commits(root_path)
 
     commits = map(lambda x: all_commits[x], sorted(all_commits))
