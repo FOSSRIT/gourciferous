@@ -59,7 +59,7 @@ GENERATING THE LOG
 
 2. From the location of log_generator.py::
 
-       python log_generator.py {GIT_FOLDER} {LOGFILE} {COLOR_FILE}
+       python log_generator.py -g {GIT_FOLDER} -o {LOGFILE} [-c {COLOR_FILE}]
 
    Where {GIT_FOLDER} is the directory containing all of your git
    repositories, and {LOGFILE} is the destination of your custom-format
