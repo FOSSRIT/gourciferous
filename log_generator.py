@@ -178,10 +178,10 @@ if __name__ == '__main__':
         print(args.avatarFile)
     else:
         print('No avatars')
-    
+
     all_commits = compile_commits(root_path)
 
-    commits = map(lambda x: all_commits[x], sorted(all_commits))
+    commits = [all_commits[x] for x in sorted(all_commits)]
 
     with open(output_file, 'w') as f:
         for lines in commits:
