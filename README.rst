@@ -96,3 +96,13 @@ Please refer to ffmpeg documentation to understand these flags and how
 to tweak them. {OUTPUTFILE} is the path to the final video and its format
 will be automatically determined by the extension you choose.
 (e.g. file.mov, file.flv, file.mp4)
+
+RUNNING THE UNIT TESTS
+======================
+
+The test suite can be run with the following command:
+
+    % nosetests
+
+This will run the log generator on gourciferous itself, which currently
+assumes that you do not have any other nested git repositories within it.
