@@ -1,6 +1,8 @@
+#!/usr/bin/env python
 import os
+import unittest
 
-class TestLogGenerator(object):
+class TestLogGenerator(unittest.TestCase):
 
     def test_compile_commits(self):
         from log_generator import compile_commits
@@ -9,3 +11,6 @@ class TestLogGenerator(object):
         split = sorted_commits[0][0].split('|')
         assert split[0] == '1370448542', split[0]
         assert split[1] == 'Remy Decausemaker', split[1]
+
+if __name__ == '__main__':
+    unittest.main()

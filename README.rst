@@ -102,7 +102,7 @@ RUNNING THE UNIT TESTS
 
 The test suite can be run with the following command:
 
-    % nosetests
+    % ./test.py
 
 This will run the log generator on gourciferous itself, which currently
 assumes that you do not have any other nested git repositories within it.
