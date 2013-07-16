@@ -28,7 +28,6 @@ from __future__ import print_function, unicode_literals
 import time
 import os
 import string
-import sys
 
 import sh
 
@@ -40,45 +39,45 @@ import argparse
 # Color Library
 #  Just a handful of colors that look good in Gource.
 colors = [
-    'F0F0F0', # default_color
+    'F0F0F0',  # default_color
 
-    '454545', # main_black
+    '454545',  # main_black
 
-    'F03728', # main_red
-    'F8685D', # lighter_red
-    'F88E86', # lightest_red
-    'B44C43', # darker_red
-    '9C170D', # darkest_red
+    'F03728',  # main_red
+    'F8685D',  # lighter_red
+    'F88E86',  # lightest_red
+    'B44C43',  # darker_red
+    '9C170D',  # darkest_red
 
-    'F08828', # main_orange
-    'F8A75D', # lighter_orange
-    'F8BC86', # lightest_orange
-    'B47943', # darker_orange
-    '9C520D', # darkest_orange
+    'F08828',  # main_orange
+    'F8A75D',  # lighter_orange
+    'F8BC86',  # lightest_orange
+    'B47943',  # darker_orange
+    '9C520D',  # darkest_orange
 
-    'BFE626', # main_yellow
-    'D4F35B', # lighter_yellow
-    'DCF383', # lightest_yellow
-    '97AD41', # darker_yellow
-    '7A960C', # darkest_yellow
+    'BFE626',  # main_yellow
+    'D4F35B',  # lighter_yellow
+    'DCF383',  # lightest_yellow
+    '97AD41',  # darker_yellow
+    '7A960C',  # darkest_yellow
 
-    '1FB839', # main_green
-    '52DB6A', # lighter_green
-    '77DB88', # lightest_green
-    '348A43', # darker_green
-    '0A771D', # darkest_green
+    '1FB839',  # main_green
+    '52DB6A',  # lighter_green
+    '77DB88',  # lightest_green
+    '348A43',  # darker_green
+    '0A771D',  # darkest_green
 
-    '1B8493', # main_blue
-    '4EBAC9', # lighter_blue
-    '6FBEC9', # lightest_blue
-    '2B666E', # darker_blue
-    '095560', # darkest_blue
+    '1B8493',  # main_blue
+    '4EBAC9',  # lighter_blue
+    '6FBEC9',  # lightest_blue
+    '2B666E',  # darker_blue
+    '095560',  # darkest_blue
 
-    '841B93', # main_purple
-    'BA4EC9', # lighter_purple
-    'BE6FC9', # lightest_purple
-    '662B6E', # darker_purple
-    '550960', # darkest_purple
+    '841B93',  # main_purple
+    'BA4EC9',  # lighter_purple
+    'BE6FC9',  # lightest_purple
+    '662B6E',  # darker_purple
+    '550960',  # darkest_purple
 ]
 
 
@@ -97,7 +96,8 @@ def compile_commits(root_path):
                              "--name-status").split("\n\n\x1b[33mcommit ")
             project_color = colors[(project_number % len(colors))]
             project_name = os.path.split(path)[1]
-            all_commits = project_commits(project_name, commits, all_commits, project_color)
+            all_commits = project_commits(project_name, commits,
+                                          all_commits, project_color)
             project_number += 1
 
     return all_commits
@@ -132,11 +132,10 @@ def project_commits(project, commits, all_commits, color):
             elif line[:8] == "Author: ":
                 line_exp = line.split(': ')[1].split('<')
                 author = string.capwords(line_exp[0])
-                email_host = line_exp[1].split('>')[0].split('@').pop()
 
             # Append files
             elif (line[:2] == "M\t") or (line[:2] == "A\t") \
-                 or (line[:2] == "D\t"):
+                    or (line[:2] == "D\t"):
                 #if filter(labmda x: re.match(x, line) is not None, ignore):
                 #    continue
                 modified_path = '/'.join([year, project, line[2:]])
@@ -151,18 +150,17 @@ def project_commits(project, commits, all_commits, color):
             else:
                 all_commits[date].append(entry)
 
-        # TODO Add avatars file generating here
-
     return all_commits
 
 
 if __name__ == '__main__':
 
     p = argparse.ArgumentParser(description='Create a custom Gource log file.')
-    p.add_argument('-g', '--gitDirectory', default=os.getcwd(), help='Directory with all Git logs')
-    p.add_argument('-o', '--outputLog', default='customLog.log', help='Custom Log Name')
+    p.add_argument('-g', '--gitDirectory', default=os.getcwd(),
+                   help='Directory with all Git logs')
+    p.add_argument('-o', '--outputLog', default='customLog.log',
+                   help='Custom Log Name')
     p.add_argument('-c', '--colorFile', help='Custom Color File')
-    p.add_argument('-a', '--avatarFile', help='Create an avatar output file')
     args = p.parse_args()
 
     root_path = args.gitDirectory
@@ -172,12 +170,6 @@ if __name__ == '__main__':
     if args.colorFile:
         with open(args.colorFile) as colorFile:
             colors = colorFile.readlines()
-
-    # Placeholder until avatar file generating is added
-    if args.avatarFile:
-        print(args.avatarFile)
-    else:
-        print('No avatars')
 
     all_commits = compile_commits(root_path)
 
