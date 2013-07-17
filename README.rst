@@ -71,7 +71,7 @@ GENERATING THE AVATARS
 ======================
 
 1. Create a domain file that links an email host with a
-   file path of the desired avatar png. It should be formatted as:
+   file path of the desired avatar png. It should be formatted as::
 
         emailhost.com|/path/to/avatar
         otherhost.net|/path/to/nextavatar
