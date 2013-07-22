@@ -59,13 +59,16 @@ GENERATING THE LOG
 
 2. From the location of log_generator.py::
 
-       python log_generator.py -g {GIT_FOLDER} -o {LOGFILE} [-c {COLOR_FILE}]
+       python log_generator.py [-h] [-g GIT_FOLDER] [-o LOGFILE] [-c COLORFILE]
+                               [-u HLUSER] [-l HLCOLOR] [-y]
 
    Where {GIT_FOLDER} is the directory containing all of your git
    repositories, and {LOGFILE} is the destination of your custom-format
-   log. {COLOR_FILE} is an optional file, with one color on each line
+   log. {COLORFILE} is an optional file, with one color on each line
    in hexdecimal format (ie, '13579AC', with no quotes and no other
    characters) which details which colors to use and in which order.
+   {HLUSER} is a name of a contributor whose commits should be highlighted,
+   and {HLCOLOR} is the color of the highlighted commits.
 
 GENERATING THE AVATARS
 ======================
