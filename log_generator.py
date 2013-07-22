@@ -84,7 +84,7 @@ colors = [
 #**********************
 # EXECUTABLE CODE
 #**********************
-def compile_commits(root_path):
+def compile_commits(root_path, hlUser, hlColor, years):
     all_commits = dict()
     project_number = 0
 
@@ -96,8 +96,9 @@ def compile_commits(root_path):
                              "--name-status").split("\n\n\x1b[33mcommit ")
             project_color = colors[(project_number % len(colors))]
             project_name = os.path.split(path)[1]
-            all_commits = project_commits(project_name, commits,
-                                          all_commits, project_color)
+            all_commits = project_commits(project_name, commits, all_commits,
+                                          project_color, hlUser, hlColor,
+                                          years)
             project_number += 1
 
     return all_commits
@@ -106,7 +107,8 @@ def compile_commits(root_path):
 #*************************
 #  FUNCTIONS
 #*************************
-def project_commits(project, commits, all_commits, color):
+def project_commits(project, commits, all_commits, color,
+                    hlUser, hlColor, years):
     year = None
     for commit in commits:
         commit = commit.split("\n")
@@ -138,12 +140,18 @@ def project_commits(project, commits, all_commits, color):
                     or (line[:2] == "D\t"):
                 #if filter(labmda x: re.match(x, line) is not None, ignore):
                 #    continue
-                modified_path = '/'.join([year, project, line[2:]])
+                if years:
+                    modified_path = '/'.join([year, project, line[2:]])
+                else:
+                    modified_path = '/'.join([project, line[2:]])
                 files.append('|'.join([line[:1], modified_path]))
 
         # Generate log lines
         for file in files:
-            entry = '|'.join([date, author, file, color]) + '\n'
+            if author == hlUser:
+                entry = '|'.join([date, author, file, hlColor]) + '\n'
+            else:
+                entry = '|'.join([date, author, file, color]) + '\n'
             entry = entry.encode('utf8')
             if not all_commits.get(date):
                 all_commits[date] = [entry]
@@ -157,12 +165,20 @@ if __name__ == '__main__':
 
     p = argparse.ArgumentParser(description='Create a custom Gource log file.')
     p.add_argument('-g', '--gitDirectory', default=os.getcwd(),
-                   help='Directory with all Git logs')
+                   help='Directory with all Git logs (g for Git!)')
     p.add_argument('-o', '--outputLog', default='customLog.log',
-                   help='Custom Log Name')
-    p.add_argument('-c', '--colorFile', help='Custom Color File')
+                   help='Custom Log Name (o for Output!)')
+    p.add_argument('-c', '--colorFile',
+                   help='Custom Color File (c for Color!)')
+    p.add_argument('-u', '--hlUser',
+                   help='Highlight User Contributions. (u for User!)')
+    p.add_argument('-l', '--hlColor', default='CC0000',
+                   help='Color to highlight user commits. (l for highLight!)')
+    p.add_argument('-y', '--years', action='store_true',
+                   help='Seperate commits by Year.')
     args = p.parse_args()
 
+    # Set filepaths
     root_path = args.gitDirectory
     output_file = args.outputLog
 
@@ -171,7 +187,16 @@ if __name__ == '__main__':
         with open(args.colorFile) as colorFile:
             colors = colorFile.readlines()
 
-    all_commits = compile_commits(root_path)
+    # Get highlighted User
+    if args.hlUser:
+        hlUser = args.hlUser
+    else:
+        hlUser = "No Highlight"
+
+    # Get highlight Color
+    hlColor = args.hlColor
+
+    all_commits = compile_commits(root_path, hlUser, hlColor, args.years)
 
     commits = [all_commits[x] for x in sorted(all_commits)]
 
