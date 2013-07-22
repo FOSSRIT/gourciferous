@@ -93,7 +93,7 @@ def compile_commits(root_path, hlUser, hlColor, years):
         if '.git' in names:
             gitpath = os.path.join(path, '.git')
             commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
-                             "--name-status").split("\n\n\x1b[33mcommit ")
+                             "--name-status")
             project_color = colors[(project_number % len(colors))]
             project_name = os.path.split(path)[1]
             all_commits = project_commits(project_name, commits, all_commits,
@@ -110,48 +110,44 @@ def compile_commits(root_path, hlUser, hlColor, years):
 def project_commits(project, commits, all_commits, color,
                     hlUser, hlColor, years):
     year = None
-    for commit in commits:
-        commit = commit.split("\n")
-        files = list()
-        date = 0
-        author = ''
+    commit_lines = commits.split("\n")
+    date = 0
+    author = ''
 
-        for line in commit:
-            # Skip blanks
-            if not line.strip():
-                continue
+    for line in commit_lines:
+        # Skip blanks
+        if not line.strip():
+            continue
 
-            # Extract date
-            if line[:8] == "Date:   ":
-                # Python and %z don't get along
-                date = line[8:].split(' -')[0].split(' +')[0]
-                year = date.split()[-1]
-                date = time.mktime(
-                    time.strptime(date, '%a %b %d %H:%M:%S %Y'))
-                date = str(int(date))
+        # Extract date
+        if line[:8] == "Date:   ":
+            # Python and %z don't get along
+            date = line[8:].split(' -')[0].split(' +')[0]
+            year = date.split()[-1]
+            date = time.mktime(
+                time.strptime(date, '%a %b %d %H:%M:%S %Y'))
+            date = str(int(date))
 
-            # Extract author and email
-            elif line[:8] == "Author: ":
-                line_exp = line.split(': ')[1].split('<')
-                author = string.capwords(line_exp[0])
+        # Extract author and email
+        elif line[:8] == "Author: ":
+            line_exp = line.split(': ')[1].split('<')
+            author = string.capwords(line_exp[0])
 
-            # Append files
-            elif (line[:2] == "M\t") or (line[:2] == "A\t") \
-                    or (line[:2] == "D\t"):
-                #if filter(labmda x: re.match(x, line) is not None, ignore):
-                #    continue
-                if years:
-                    modified_path = '/'.join([year, project, line[2:]])
-                else:
-                    modified_path = '/'.join([project, line[2:]])
-                files.append('|'.join([line[:1], modified_path]))
-
-        # Generate log lines
-        for file in files:
-            if author == hlUser:
-                entry = '|'.join([date, author, file, hlColor]) + '\n'
+        # Append files
+        elif (line[:2] == "M\t") or (line[:2] == "A\t") \
+                or (line[:2] == "D\t"):
+            #if filter(labmda x: re.match(x, line) is not None, ignore):
+            #    continue
+            if years:
+                modified_path = '/'.join([year, project, line[2:]])
             else:
-                entry = '|'.join([date, author, file, color]) + '\n'
+                modified_path = '/'.join([project, line[2:]])
+            file_ = '|'.join([line[:1], modified_path])
+
+            if author == hlUser:
+                entry = '|'.join([date, author, file_, hlColor]) + '\n'
+            else:
+                entry = '|'.join([date, author, file_, color]) + '\n'
             entry = entry.encode('utf8')
             if not all_commits.get(date):
                 all_commits[date] = [entry]
