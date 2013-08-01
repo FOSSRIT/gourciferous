@@ -18,6 +18,8 @@ I'm also part of the RIT Lab for Technological Literacy, or **the FOSSBox**.
 
 I'm in my third year at **RIT** for **Computer Engineering**.
 
+Check me out on **GitHub** http://github.com/zanarama/.
+
 ----
 
 Don't tell, Show
