@@ -20,14 +20,14 @@ I'm in my third year at **RIT** for **Computer Engineering**.
 
 ----
 
-Better than Crayons
-====================
+Don't tell, Show
+================
 
 Gource is a **version control visualization** tool.
 
-It makes pretty trees. We created tools to make them prettier.
+It turns the revision history log into an **animated tree**.
 
-Gource is the medium.
+Directories are branches, and files are leaves.
 
 ----
 
@@ -92,6 +92,8 @@ This visualization highlights the contributions in **YUM** by **Seth Vidal**.
     It uses many of the techniques discussed.
 
 http://youtu.be/OARZB0jGziQ
+
+----
 
 Acknowledgements
 ================
