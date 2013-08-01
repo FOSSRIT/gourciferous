@@ -1,0 +1,46 @@
+<!DOCTYPE html><html
+    xmlns="http://www.w3.org/1999/xhtml"><head><title></title><meta
+        name="generator" content="Hovercraft! 1.0
+        http://regebro.github.com/hovercraft"></meta><link rel="stylesheet"
+        href="css/hovercraft.css" media="all"></link><link rel="stylesheet"
+        href="css/impressConsole.css" media="all"></link><link rel="stylesheet"
+        href="css/fedora960.css" media="all"></link><link rel="stylesheet"
+        href="css/highlight.css" media="all"></link></head><body
+        class="impress-not-supported"><div id="impress"><div class="step"
+                step="0" data-x="0" data-y="0"><h1
+                    id="gourciferous">Gourciferous</h1><p><strong>Storytelling
+                    via Sourcecode</strong></p><p><em>Suzanne Reed, Red Hat
+                    Intern</em></p></div><div class="step" step="1"
+                data-x="1600" data-y="0"><h1 id="about-me">About Me</h1><p>I'm
+                <strong>Suzanne Reed</strong>, and I am a <strong>Red
+                    Hat</strong> intern.</p><p>I'm also part of the RIT Lab for
+                Technological Literacy, or <strong>the
+                    FOSSBox</strong>.</p><p>I'm in my third year at
+                <strong>RIT</strong> for <strong>Computer
+                    Engineering</strong>.</p></div><div class="step" step="2"
+                data-x="3200" data-y="0"><h1 id="better-than-crayons">Better
+                    than Crayons</h1><p>Gource is a <strong>version control
+                    visualization</strong> tool.</p><p>It makes pretty trees.
+                We created tools to make them prettier.</p><p>Gource is the
+                medium.</p></div><div class="step" step="3" data-x="4800"
+                data-y="0"><h1 id="writing-the-story">Writing the
+                    Story</h1><p>Gource can use <strong>custom logs</strong> to
+                affect how a story
+                plays.</p><p><strong>log_generator.py</strong> is a tool to
+                create custom logs. It has a lot of
+                options:</p><ul><li>Multi-Gource</li><li>Colorizing</li><li>User
+                    Highlighting</li><li>Branches by Year</li></ul></div><div
+                class="step" step="4" data-x="6400" data-y="0"><h1
+                    id="the-plot-thickens">The Plot Thickens</h1><p>Settings
+                can be controlled either command-line or in a <strong>config
+                    file</strong>.</p><dl><dt>The overall message of a Gource
+                    story is told in the <strong>setting</strong>,
+                    <strong>timing</strong>,</dt><dd><p>and
+                    <strong>characters</strong>. A lot of trial and error can
+                    be needed to get them
+                    just right.</p></dd></dl></div><div class="step" step="5" data-x="8000" data-y="0"><h1 id="character-development">Character Development</h1><dl><dt>Custom avatars are a way to highlight individuals and groups. <strong>avatar_gen.py</strong></dt><dd><p>is a helpful tool to quickly create the avatar files.</p></dd></dl><p>It takes a file that contains email domains and an image to user as an avatar.</p><blockquote><p><em>redhat.com|shadowman.png</em>
+                    <em>fedoraproject.org|fedora_logo.png</em></p></blockquote><p>Or Gravatars can be used for avatars.</p></div><div class="step" step="6" data-x="9600" data-y="0"><h1 id="publishing">Publishing</h1><dl><dt>To record Gource visualizations a <strong>ppm stream</strong> is outputted and piped into</dt><dd><p><strong>ffmpeg</strong>.</p></dd></dl><p>% gource --load-config /path/to/gourciferous.conf -1280x720 {LOGFILE} --output-ppm-stream -| ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 {OUTPUTFILE}</p></div><div class="step" step="7" data-x="11200" data-y="0"><h1 id="a-tribute">A Tribute</h1><dl><dt>This visualization highlights the contributions in <strong>YUM</strong> by <strong>Seth Vidal</strong>.</dt><dd><p>It uses many of the techniques discussed.</p></dd></dl><p><a href="http://youtu.be/OARZB0jGziQ">http://youtu.be/OARZB0jGziQ</a></p><h1 id="acknowledgements">Acknowledgements</h1><dl><dt>Gource - <a href="https://github.com/acaudwell/Gource">https://github.com/acaudwell/Gource</a></dt><dd><p>Andrew Caudwell</p></dd><dt>Multi-Gource - <a href="https://github.com/Frencil/MultiGource">https://github.com/Frencil/MultiGource</a></dt><dd><p>Christopher Clark</p></dd><dt>Red Hat Mentors and Fellow FossBoxers</dt><dd><p>Remy Decausemaker
+                    Nathanial Case
+                    Ralph Bean
+                    Luke Macken
+                    David Gay</p></dd></dl></div><div class="step" step="8" data-x="12800" data-y="0"><p>Document may not end with a transition.</p></div></div><div id="hovercraft-help"><table><tr><th>Space</th><td>Forward</td></tr><tr><th>Left, Down, Page Down</th><td>Next slide</td></tr><tr><th>Right, Up, Page Up</th><td>Previous slide</td></tr><tr><th>P</th><td>Open presenter console</td></tr><tr><th>H</th><td>Toggle this help</td></tr></table></div><script type="text/javascript" src="js/impress.js"></script><script type="text/javascript" src="js/impressConsole.js"></script><script type="text/javascript" src="js/hovercraft.js"></script></body></html>
