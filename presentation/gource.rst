@@ -54,8 +54,8 @@ The Plot Thickens
 Settings can be controlled either command-line or in a **config file**.
 
 The overall message of a Gource story is told in the **setting**, **timing**,
-    and **characters**. A lot of trial and error can be needed to get them
-    just right.
+and **characters**. A lot of trial and error can be needed to get them just
+right.
 
 ----
 
@@ -63,7 +63,7 @@ Character Development
 =====================
 
 Custom avatars are a way to highlight individuals and groups. **avatar_gen.py**
-    is a helpful tool to quickly create the avatar files.
+is a helpful tool to quickly create the avatar files.
 
 It takes a file that contains email domains and an image to user as an avatar.
 
@@ -78,7 +78,7 @@ Publishing
 ==========
 
 To record Gource visualizations a **ppm stream** is outputted and piped into
-    **ffmpeg**.
+**ffmpeg**.
 
 % gource --load-config /path/to/gourciferous.conf -1280x720 {LOGFILE} --output-ppm-stream -| \
 ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 {OUTPUTFILE}
@@ -89,7 +89,7 @@ A Tribute
 =========
 
 This visualization highlights the contributions in **YUM** by **Seth Vidal**.
-    It uses many of the techniques discussed.
+It uses many of the techniques discussed.
 
 http://youtu.be/OARZB0jGziQ
 
