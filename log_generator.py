@@ -94,7 +94,7 @@ def compile_commits(root_path, hlUser, hlColor, years):
             gitpath = os.path.join(path, '.git')
             commits = sh.git("--git-dir", gitpath, "--no-pager", "log",
                              "--name-status")
-            project_color = colors[(project_number % len(colors))]
+            project_color = colors[(project_number % len(colors))].strip()
             project_name = os.path.split(path.rstrip('/'))[1]
             all_commits = project_commits(project_name, commits, all_commits,
                                           project_color, hlUser, hlColor,
