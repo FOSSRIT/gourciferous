@@ -18,6 +18,47 @@ import os
 import shutil
 import argparse
 import sh
+import requests
+import hashlib
+import imghdr
+
+
+def create_gravatars(root_path, avatar_dir):
+    # If dir is a repo, then slurp in the formatted log
+    names = dict()
+
+    for path, names, files in os.walk(root_path):
+        if '.git' in names:
+            gitpath = os.path.join(path, '.git')
+            contributors = sh.git("--git-dir", gitpath, "--no-pager", "log",
+                                  "--format='%aN|%aE'").strip().split("\n")
+
+            # Get the author
+            for entry in contributors:
+                line_exp = entry.split('|')
+                author = line_exp[0].strip().strip("'")
+                email = line_exp[1].strip("'")
+                #names[author] = email
+
+                # Pull gravatar and save
+                if not os.path.isfile(avatar_dir+author+'.png'):
+                    gravatar_url = "http://www.gravatar.com/avatar/" + \
+                                   hashlib.md5(email.lower()).hexdigest() + '?'
+                    r = requests.get(gravatar_url, params={'d':'404'})
+
+                    print(gravatar_url)
+                    print(r.status_code)
+
+                    if r.status_code != 200:
+                        # Don't get anything
+                        pass
+                    else:
+                        filename = avatar_dir + author
+                        with open(filename, 'w') as file_:
+                            file_.write(r.content)
+
+                        # Adds the proper file extension
+                        os.rename(filename, filename+'.'+imghdr.what(filename))
 
 
 def create_files(root_path, domains, avatar_dir):
@@ -44,25 +85,32 @@ def create_files(root_path, domains, avatar_dir):
 if __name__ == '__main__':
 
     p = argparse.ArgumentParser(description='Creates avatar files')
-    p.add_argument('gitDir', help='The directory of git logs')
-    p.add_argument('domainFile',
+    p.add_argument('-g', '--gitDir', default=os.getcwd(),
+                   help='The directory of git logs')
+    p.add_argument('-d', '--domainFile',
                    help='A file with domains and avatar image path')
-    p.add_argument('-d', '--avatarDir', default=os.getcwd()+'/avatars/',
+    p.add_argument('-a', '--avatarDir', default=os.getcwd()+'/avatars/',
                    help='Avatar directory')
     args = p.parse_args()
 
     root_path = args.gitDir
-    domain_file_location = args.domainFile
     avatar_dir = args.avatarDir
-    domains = dict()
-
-    # Read in domain names and the corresponding avatar
-    with open(domain_file_location) as domain_file:
-        for line in domain_file:
-            domains[line.split('|')[0].strip()] = line.split('|')[1].strip()
 
     # Create repository if it does not exist
     if not os.path.exists(avatar_dir):
         os.makedirs(avatar_dir)
 
-    create_files(root_path, domains, avatar_dir)
+    if args.domainFile:
+        # Read in domain names and the corresponding avatar
+        domain_file_location = args.domainFile
+        domains = dict()
+
+        with open(domain_file_location) as domain_file:
+            for line in domain_file:
+                contents = line.split('|')
+                domains[contents[0].strip()] = contents[1].strip()
+
+        create_files(root_path, domains, avatar_dir)
+    else:
+        # Create Gravatars instead
+        create_gravatars(root_path, avatar_dir)
