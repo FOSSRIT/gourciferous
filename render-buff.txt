@@ -1,0 +1,1 @@
+time gource --load-config buffcivappsym.conf -f -1600x900 buffcivappsym.log -loop
