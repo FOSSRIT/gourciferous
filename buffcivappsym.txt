@@ -6,7 +6,6 @@
 1370128087|National Day of Civic Hacking v.1.0
 1371000045|HHROC/HHSYR Collaboration
 1371654634|First Google Summer of Code Student
-1372280682|Mozilla Open Badges System for Sugar
 1378768422|HFOSS v.1.5
 1386291607|HackUpsate Hackathon
 1386437593|Random Hacks of Kindness v.2.0
